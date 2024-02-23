@@ -2,10 +2,10 @@
 
 import Wrapper from "@/components/Wrapper";
 
-export default function Home() {
+export default function Products() {
   return (
     <Wrapper>
-      <div>Main</div>
+      <div>products</div>
     </Wrapper>
   );
 }

@@ -1,11 +1,9 @@
-"use client";
-
 import Wrapper from "@/components/Wrapper";
 
-export default function Home() {
+export default function Cart() {
   return (
     <Wrapper>
-      <div>Main</div>
+      <div>cart</div>
     </Wrapper>
   );
 }
