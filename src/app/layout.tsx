@@ -1,11 +1,8 @@
-import "@/styles/globals.scss";
+'use client';
 
-import type { Metadata } from "next";
+import '@/styles/globals.scss';
 
-export const metadata: Metadata = {
-  title: "Shoppy",
-  description: "Juniahn Shoppy web",
-};
+import { RecoilRoot } from 'recoil';
 
 export default function RootLayout({
   children,
@@ -14,7 +11,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <RecoilRoot>{children}</RecoilRoot>
+      </body>
     </html>
   );
 }

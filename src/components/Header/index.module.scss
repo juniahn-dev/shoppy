@@ -1,4 +1,4 @@
-@import "~@/styles/common/index";
+@import '~@/styles/common/index';
 
 .container {
   z-index: $zIndexHigh;
@@ -28,10 +28,28 @@
   align-items: center;
 }
 
+.headerContent {
+  margin-right: 1rem;
+}
+
+.uploadImg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+
+  .userImg {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
 .loginBtn {
   background-color: #ff7a7a;
   padding: 0.5rem 1rem;
-  margin-left: 3rem;
 
   font-size: 1.2rem;
   font-weight: bold;

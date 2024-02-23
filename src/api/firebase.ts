@@ -1,13 +1,7 @@
-import {
-  GoogleAuthProvider,
-  User,
-  getAuth,
-  onAuthStateChanged,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
+import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { getDatabase, onValue, ref, set } from 'firebase/database';
 
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -18,11 +12,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const db = getDatabase();
 const provider = new GoogleAuthProvider();
 
 export async function login() {
   return signInWithPopup(auth, provider).then((result) => {
     const user = result.user;
+
     return user;
   });
 }
@@ -34,5 +30,21 @@ export async function logout() {
 export function onUserStateChange(callback: any) {
   return onAuthStateChanged(auth, (user) => {
     callback(user);
+  });
+}
+
+export function adminList(callback: any) {
+  const starCountRef = ref(db, 'admins');
+  return onValue(starCountRef, (snapshot) => {
+    const data = snapshot.val();
+
+    callback(data);
+  });
+}
+
+export function insertProduct(name: string) {
+  set(ref(db, `products/${2}`), {
+    productName: name,
+    size: ['xl', 'l', 'm', 's'],
   });
 }

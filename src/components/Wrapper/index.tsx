@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Header from "../Header";
-import styles from "./index.module.scss";
+import Header from '../Header';
+import styles from './index.module.scss';
 
 interface WrapperProps {
   children: JSX.Element;
