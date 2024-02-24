@@ -1,6 +1,7 @@
 import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { getDatabase, onValue, ref, set } from 'firebase/database';
 
+import { call } from 'ramda';
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
@@ -11,7 +12,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
+const auth = getAuth(app);
 const db = getDatabase();
 const provider = new GoogleAuthProvider();
 
@@ -27,9 +28,12 @@ export async function logout() {
   return signOut(auth).then(() => null);
 }
 
+// TODO: login 후 page를 router에서 바꾸면 error
 export function onUserStateChange(callback: any) {
-  return onAuthStateChanged(auth, (user) => {
-    callback(user);
+  onAuthStateChanged(auth, (user) => {
+    const copyUser = JSON.parse(JSON.stringify(user));
+
+    callback(copyUser);
   });
 }
 

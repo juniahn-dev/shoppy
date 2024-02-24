@@ -1,7 +1,6 @@
 'use client';
 
 import { login, logout, onUserStateChange } from '@/api/firebase';
-import { useEffect, useState } from 'react';
 
 import ImageComponent from '../Common/Image';
 import Link from 'next/link';
@@ -9,11 +8,10 @@ import { User } from 'firebase/auth';
 import clsx from 'clsx';
 import pencilPNG from '@/assets/header/pencil.png';
 import styles from './index.module.scss';
+import { useEffect } from 'react';
 import { useUser } from '../hooks/store/user';
 
 const Header = () => {
-  // TODO: recoil 사용시 error 발생
-  const [userr, settUser] = useState<null | User>(null);
   const { user, setUser } = useUser();
 
   const setLogin = async () => {
@@ -27,7 +25,6 @@ const Header = () => {
 
   useEffect(() => {
     onUserStateChange((user: User) => {
-      // settUser(user);
       setUser(user);
     });
   }, []);
