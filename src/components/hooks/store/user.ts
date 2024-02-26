@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 const userState = atom<User | null>({
   key: 'User',
   default: null,
+  dangerouslyAllowMutability: true,
 });
 
 export const useUser = (initValue?: User) => {
