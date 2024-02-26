@@ -42,9 +42,11 @@ const Header = () => {
               <Link className={styles.headerContent} href={`/cart`}>
                 Cart
               </Link>
-              <Link href={`/upload`}>
-                <ImageComponent src={pencilPNG} className={clsx(styles.headerContent, styles.uploadImg)} />
-              </Link>
+              {user.isAdmin && (
+                <Link href={`/upload`}>
+                  <ImageComponent src={pencilPNG} className={clsx(styles.headerContent, styles.uploadImg)} />
+                </Link>
+              )}
               <div className={clsx(styles.headerContent, styles.userProfile)}>
                 <ImageComponent src={user.photoURL || ''} className={styles.userImg} />
                 <div>{user.displayName}</div>

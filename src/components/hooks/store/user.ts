@@ -1,7 +1,8 @@
-import { atom, useRecoilState } from 'recoil';
+import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { User } from 'firebase/auth';
-import { isNil } from 'ramda';
+import { adminList } from '@/api/firebase';
+import { includes } from 'ramda';
 import { useEffect } from 'react';
 
 const userState = atom<User | null>({
@@ -10,12 +11,42 @@ const userState = atom<User | null>({
   dangerouslyAllowMutability: true,
 });
 
-export const useUser = (initValue?: User) => {
-  const [user, setUser] = useRecoilState(userState);
+const adminsState = atom<[]>({
+  key: 'Admins',
+  default: [],
+});
+
+const returnUserState = selector({
+  key: 'UserSelector',
+  get: ({ get }) => {
+    const user = get(userState);
+
+    if (user) {
+      const admins = get(adminsState);
+
+      const isCombineAdmin = includes(user.uid, admins);
+
+      return {
+        ...user,
+        isAdmin: isCombineAdmin,
+      };
+    }
+
+    return user;
+  },
+  dangerouslyAllowMutability: true,
+});
+
+export const useUser = () => {
+  const setUser = useSetRecoilState(userState);
+  const setAdmins = useSetRecoilState(adminsState);
+  const user = useRecoilValue(returnUserState);
 
   useEffect(() => {
-    !isNil(initValue) && setUser(initValue);
-  }, [initValue]);
+    adminList((admin: any) => {
+      setAdmins(admin);
+    });
+  }, []);
 
   return {
     user,
