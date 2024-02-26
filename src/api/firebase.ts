@@ -1,5 +1,5 @@
-import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { getDatabase, onValue, ref, set } from 'firebase/database';
+import { GoogleAuthProvider, User, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { get, getDatabase, ref, set } from 'firebase/database';
 
 import { initializeApp } from 'firebase/app';
 
@@ -16,31 +16,31 @@ const db = getDatabase();
 const provider = new GoogleAuthProvider();
 
 export async function login() {
-  return signInWithPopup(auth, provider).then((result) => {
-    const user = result.user;
-
-    return user;
-  });
+  signInWithPopup(auth, provider).catch(console.error);
 }
 
 export async function logout() {
-  return signOut(auth).then(() => null);
+  signOut(auth).catch(console.error);
 }
 
 export function onUserStateChange(callback: any) {
-  onAuthStateChanged(auth, (user) => {
-    const userCopy = JSON.parse(JSON.stringify(user));
+  onAuthStateChanged(auth, async (user) => {
+    const updatedUser = user ? await adminUser(user) : null;
+
+    const userCopy = JSON.parse(JSON.stringify(updatedUser));
 
     callback(userCopy);
   });
 }
 
-export function adminList(callback: any) {
-  const starCountRef = ref(db, 'admins');
-  return onValue(starCountRef, (snapshot) => {
-    const data = snapshot.val();
+export async function adminUser(user: User) {
+  return get(ref(db, 'admins')).then((snapshot) => {
+    if (snapshot.exists()) {
+      const admins = snapshot.val();
+      const isAdmin = admins.includes(user.uid);
 
-    callback(data);
+      return { ...user, isAdmin };
+    }
   });
 }
 

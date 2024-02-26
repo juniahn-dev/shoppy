@@ -2,6 +2,7 @@
 
 import '@/styles/globals.scss';
 
+import { AuthContextProvider } from '@/components/Context/AuthContext';
 import { RecoilRoot } from 'recoil';
 
 export default function RootLayout({
@@ -12,7 +13,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <RecoilRoot>{children}</RecoilRoot>
+        <RecoilRoot>
+          <AuthContextProvider>{children}</AuthContextProvider>
+        </RecoilRoot>
       </body>
     </html>
   );
