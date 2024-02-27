@@ -1,0 +1,30 @@
+.title {
+  display: flex;
+  justify-content: center;
+
+  margin-bottom: 1rem;
+
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.uploadImage {
+  width: 10rem;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+
+  & > input {
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+}
+
+.submitButton {
+  background-color: #ffa155;
+  padding: 0.5rem;
+
+  color: #ffffff;
+}

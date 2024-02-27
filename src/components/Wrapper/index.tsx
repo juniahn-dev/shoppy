@@ -29,9 +29,11 @@ const Wrapper: React.FC<WrapperProps> = ({ children, requireAdmin }) => {
     <div className={styles.container}>
       <Header />
 
-      <div className={styles.body}>
-        {children}
-        <div className={styles.footer}>Footer</div>
+      <div>
+        <div className={styles.body}>
+          {children}
+          <div className={styles.footer}>Footer</div>
+        </div>
       </div>
     </div>
   );

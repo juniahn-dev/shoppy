@@ -2,6 +2,7 @@ import { GoogleAuthProvider, User, getAuth, onAuthStateChanged, signInWithPopup,
 import { get, getDatabase, ref, set } from 'firebase/database';
 
 import { initializeApp } from 'firebase/app';
+import { v4 as uuidv4 } from 'uuid';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -44,9 +45,19 @@ export async function adminUser(user: User) {
   });
 }
 
-export function insertProduct(name: string) {
-  set(ref(db, `products/${2}`), {
-    productName: name,
-    size: ['xl', 'l', 'm', 's'],
+export function insertProduct(
+  productName: string,
+  price: number,
+  category: string,
+  productDescription: string,
+  options: string,
+) {
+  const spreadOption = options.toUpperCase().split(',');
+  set(ref(db, `products/${uuidv4()}`), {
+    title: productName,
+    price,
+    category,
+    description: productDescription,
+    options: spreadOption,
   });
 }
