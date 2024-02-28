@@ -1,12 +1,13 @@
 'use client';
 
-import { MouseEvent, useCallback, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 import Wrapper from '@/components/Wrapper';
 import { insertProduct } from '@/api/firebase';
 import styles from './index.module.scss';
 
 export default function Upload() {
+  const [loading, setLoading] = useState(false);
   const [productImg, setProductImg] = useState<FileList | null>(null);
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState(0);
@@ -14,10 +15,45 @@ export default function Upload() {
   const [productDescription, setProductDescription] = useState('');
   const [options, setOptions] = useState('');
 
-  const submitProduct = (event: MouseEvent<HTMLButtonElement>) => {
+  const submitProduct = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    insertProduct(productName, price, category, productDescription, options);
+    try {
+      setLoading(true);
+
+      if (productImg) {
+        const formData = new FormData();
+        formData.append('file', productImg[0]);
+        formData.append('upload_preset', 'my_uploads');
+
+        const imgData = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          },
+        )
+          .then((response) => {
+            return response.text();
+          })
+          .then((data) => {
+            return JSON.parse(data);
+          });
+
+        const imgLink = imgData.secure_url;
+        insertProduct(imgLink, productName, price, category, productDescription, options);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+      setProductImg(null);
+      setProductName('');
+      setPrice(0);
+      setCategory('');
+      setProductDescription('');
+      setOptions('');
+    }
   };
 
   useEffect(() => {
@@ -43,18 +79,20 @@ export default function Upload() {
   return (
     <Wrapper requireAdmin>
       <div>
-        <div className={styles.title}>Submit New Product</div>
+        <div className={styles.title}>Submit new product</div>
+        {loading && <div className={styles.insertResult}>New product inserting...💫</div>}
         {productImg && <img className={styles.uploadImage} id="uploadImage" />}
         <form className={styles.formContainer}>
           <input type="file" onChange={(val) => setProductImg(val.target.files || null)} required />
           <input
-            placeholder="Product Name"
+            placeholder="Product name"
             value={productName || ''}
             onChange={(val) => setProductName(val.target.value || '')}
             required
           />
           <input
             placeholder="Price"
+            defaultValue={price}
             onChange={(val) => setPrice(Number(val.target.value) || 0)}
             type="number"
             required
@@ -66,7 +104,7 @@ export default function Upload() {
             required
           />
           <input
-            placeholder="Product Description"
+            placeholder="Product description"
             value={productDescription || ''}
             onChange={(val) => setProductDescription(val.target.value || '')}
             required
@@ -78,7 +116,7 @@ export default function Upload() {
             required
           />
           <button className={styles.submitButton} onClick={submitProduct}>
-            Submit Product
+            Submit product
           </button>
         </form>
       </div>

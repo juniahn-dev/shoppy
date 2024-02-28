@@ -46,6 +46,7 @@ export async function adminUser(user: User) {
 }
 
 export function insertProduct(
+  imgLink: string,
   productName: string,
   price: number,
   category: string,
@@ -54,6 +55,7 @@ export function insertProduct(
 ) {
   const spreadOption = options.toUpperCase().split(',');
   set(ref(db, `products/${uuidv4()}`), {
+    image: imgLink,
     title: productName,
     price,
     category,
