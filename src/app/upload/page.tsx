@@ -47,12 +47,6 @@ export default function Upload() {
       console.error(err);
     } finally {
       setLoading(false);
-      setProductImg(null);
-      setProductName('');
-      setPrice(0);
-      setCategory('');
-      setProductDescription('');
-      setOptions('');
     }
   };
 
@@ -92,7 +86,6 @@ export default function Upload() {
           />
           <input
             placeholder="Price"
-            defaultValue={price}
             onChange={(val) => setPrice(Number(val.target.value) || 0)}
             type="number"
             required

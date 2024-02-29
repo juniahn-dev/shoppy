@@ -1,6 +1,7 @@
 import { GoogleAuthProvider, User, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { get, getDatabase, ref, set } from 'firebase/database';
 
+import { IProductListProps } from '@/types/firebaseTypes';
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -61,5 +62,25 @@ export function insertProduct(
     category,
     description: productDescription,
     options: spreadOption,
+  });
+}
+
+export async function productList() {
+  return get(ref(db, 'products')).then((snapshot) => {
+    if (snapshot.exists()) {
+      let array = [] as IProductListProps[];
+      const products = snapshot.val();
+
+      for (const key in products) {
+        const newMemberObj = {
+          id: key,
+          ...products[key],
+        };
+
+        array.push(newMemberObj);
+      }
+
+      return array;
+    }
   });
 }
