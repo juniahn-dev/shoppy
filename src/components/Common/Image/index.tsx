@@ -6,7 +6,7 @@ interface IImageComponentProps {
 }
 
 const ImageComponent: React.FC<IImageComponentProps> = ({ src, className }) => {
-  return <Image className={className} src={src} alt="image" width="35" height="35" />;
+  return <Image className={className} src={src} alt="image" width="1000" height="1000" />;
 };
 
 export default ImageComponent;

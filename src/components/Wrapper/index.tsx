@@ -4,7 +4,6 @@ import Header from '../Header';
 import Loading from '../Common/Loading';
 import styles from './index.module.scss';
 import { useAuthContext } from '../Context/AuthContext';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface WrapperProps {

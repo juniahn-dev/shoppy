@@ -65,7 +65,7 @@ export function insertProduct(
   });
 }
 
-export async function productList() {
+export async function getProductList() {
   return get(ref(db, 'products')).then((snapshot) => {
     if (snapshot.exists()) {
       let array = [] as IProductListProps[];
@@ -81,6 +81,18 @@ export async function productList() {
       }
 
       return array;
+    }
+
+    return [];
+  });
+}
+
+export async function getProduct(id: string | string[]) {
+  return get(ref(db, `products/${id}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      const products = snapshot.val() as IProductListProps;
+
+      return products;
     }
   });
 }

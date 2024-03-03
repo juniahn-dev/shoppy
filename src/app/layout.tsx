@@ -2,8 +2,12 @@
 
 import '@/styles/globals.scss';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import { AuthContextProvider } from '@/components/Context/AuthContext';
 import { RecoilRoot } from 'recoil';
+
+const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -14,7 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <RecoilRoot>
-          <AuthContextProvider>{children}</AuthContextProvider>
+          <QueryClientProvider client={queryClient}>
+            <AuthContextProvider>{children}</AuthContextProvider>
+          </QueryClientProvider>
         </RecoilRoot>
       </body>
     </html>

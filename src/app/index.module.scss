@@ -1,0 +1,23 @@
+.backgroundContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 30rem;
+  margin-bottom: 1rem;
+
+  background-image: url('~@/assets/dashboard/mainBackground.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
