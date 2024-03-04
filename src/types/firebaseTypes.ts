@@ -10,5 +10,9 @@ export interface IProductListProps {
 
 export interface IUsersCartProps {
   option: string;
+  price: number;
+  image: string;
+  title: string;
   productId: string;
+  count: number;
 }

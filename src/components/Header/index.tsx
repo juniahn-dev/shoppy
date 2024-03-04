@@ -14,8 +14,8 @@ import { useRouter } from 'next/navigation';
 
 const Header = () => {
   const context = useAuthContext();
-  const user = context?.user.user;
   const router = useRouter();
+  const user = context?.user.user;
 
   const logoutFunc = () => {
     logout();

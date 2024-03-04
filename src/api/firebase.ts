@@ -97,14 +97,35 @@ export async function getProduct(id: string | string[]) {
   });
 }
 
-export function insertUserCart(productId: string | string[], option: string, userId?: string) {
+export function insertUserCart(
+  productId: string | string[],
+  image: string,
+  title: string,
+  price: number,
+  option: string,
+  userId?: string,
+) {
   push(ref(db, `usersCart/${userId}`), {
     productId,
+    image,
+    title,
+    price,
     option,
+    count: 1,
   });
 }
 
 export async function getUserCartList(uid: string) {
+  return get(ref(db, `usersCart/${uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      const carts = Object.values(snapshot.val()) as IUsersCartProps[];
+
+      return carts;
+    }
+  });
+}
+
+export async function getJoin(uid: string) {
   return get(ref(db, `usersCart/${uid}`)).then((snapshot) => {
     if (snapshot.exists()) {
       const carts = Object.values(snapshot.val()) as IUsersCartProps[];

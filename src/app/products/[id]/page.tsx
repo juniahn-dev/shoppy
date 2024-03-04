@@ -29,11 +29,13 @@ export default function Products() {
   const submitProduct = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    if (!user) {
+    if (product && !user) {
       return;
     }
 
-    await insertUserCart(id, option, user?.uid);
+    if (product) {
+      await insertUserCart(id, product.image, product.title, product.price, option, user?.uid);
+    }
   };
 
   const onChangeHandler = (event: any) => {
