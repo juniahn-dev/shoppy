@@ -1,29 +1,74 @@
 'use client';
 
+import { MouseEvent, useEffect, useState } from 'react';
+import { getProduct, insertUserCart } from '@/api/firebase';
+
 import ImageComponent from '@/components/Common/Image';
 import Wrapper from '@/components/Wrapper';
-import { getProduct } from '@/api/firebase';
+import styles from './index.module.scss';
+import { useAuthContext } from '@/components/Context/AuthContext';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
 export default function Products() {
+  const context = useAuthContext();
   const { id } = useParams();
+  const user = context?.user.user;
 
-  const {
-    isLoading,
-    error,
-    data: product,
-  } = useQuery({
+  const { data: product } = useQuery({
     queryKey: ['product'],
     queryFn: () => getProduct(id),
   });
 
+  const [option, setOption] = useState('');
+
+  useEffect(() => {
+    setOption(product ? product.options[0] : '');
+  }, [product]);
+
+  const submitProduct = async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    if (!user) {
+      return;
+    }
+
+    await insertUserCart(id, option, user?.uid);
+  };
+
+  const onChangeHandler = (event: any) => {
+    setOption(event.currentTarget.value);
+  };
+
   return (
     <Wrapper>
       {product ? (
-        <div>
-          <ImageComponent src={product.image} />
-          <div>{product.title}</div>
+        <div className={styles.container}>
+          <ImageComponent className={styles.productImg} src={product.image} />
+          <div>
+            <div className={styles.productTitle}>
+              {product.title}
+              <div className={styles.productPrice}>${product.price}</div>
+            </div>
+            {product.description}
+            <form className={styles.addCartToProductForm}>
+              <div className={styles.selectOption}>
+                Option:
+                <select onChange={onChangeHandler} className={styles.productOptions}>
+                  {product.options.map((option) => {
+                    return (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <button className={styles.submitButton} onClick={submitProduct}>
+                {user ? 'Add cart' : 'Login first'}
+              </button>
+            </form>
+          </div>
         </div>
       ) : (
         <div>none</div>

@@ -7,3 +7,8 @@ export interface IProductListProps {
   price: number;
   title: string;
 }
+
+export interface IUsersCartProps {
+  option: string;
+  productId: string;
+}

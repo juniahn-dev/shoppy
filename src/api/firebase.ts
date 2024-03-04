@@ -1,7 +1,7 @@
 import { GoogleAuthProvider, User, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { get, getDatabase, ref, set } from 'firebase/database';
+import { IProductListProps, IUsersCartProps } from '@/types/firebaseTypes';
+import { get, getDatabase, push, ref, set } from 'firebase/database';
 
-import { IProductListProps } from '@/types/firebaseTypes';
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -93,6 +93,23 @@ export async function getProduct(id: string | string[]) {
       const products = snapshot.val() as IProductListProps;
 
       return products;
+    }
+  });
+}
+
+export function insertUserCart(productId: string | string[], option: string, userId?: string) {
+  push(ref(db, `usersCart/${userId}`), {
+    productId,
+    option,
+  });
+}
+
+export async function getUserCartList(uid: string) {
+  return get(ref(db, `usersCart/${uid}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      const carts = Object.values(snapshot.val()) as IUsersCartProps[];
+
+      return carts;
     }
   });
 }

@@ -1,0 +1,49 @@
+.container {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+}
+
+.productImg {
+  width: 50rem;
+  margin-right: 2rem;
+}
+
+.productTitle {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #000;
+
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.productPrice {
+  margin-top: 1.5rem;
+
+  font-size: 1.4rem;
+}
+
+.addCartToProductForm {
+  margin-top: 2rem;
+}
+
+.selectOption {
+  display: flex;
+  align-items: center;
+
+  color: #ff5757;
+}
+
+.productOptions {
+  margin-left: 0.5rem;
+  padding: 0.3rem;
+  width: 100%;
+}
+
+.submitButton {
+  margin-top: 1rem;
+  padding: 0.3rem;
+  width: 100%;
+  background-color: #ff5757;
+  color: #fff;
+}

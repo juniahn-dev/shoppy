@@ -1,13 +1,15 @@
 'use client';
 
-import { login, logout } from '@/api/firebase';
+import { getUserCartList, login, logout } from '@/api/firebase';
 
 import ImageComponent from '../Common/Image';
 import Link from 'next/link';
+import cartPNG from '@/assets/header/cart.png';
 import clsx from 'clsx';
 import pencilPNG from '@/assets/header/pencil.png';
 import styles from './index.module.scss';
 import { useAuthContext } from '../Context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 const Header = () => {
@@ -20,6 +22,11 @@ const Header = () => {
     router.replace('/');
   };
 
+  const { data: cartData } = useQuery({
+    queryKey: ['usersCart'],
+    queryFn: () => getUserCartList(user?.uid || ''),
+  });
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -31,11 +38,12 @@ const Header = () => {
           {user && (
             <>
               <Link className={styles.headerContent} href={`/cart`}>
-                Cart
+                <ImageComponent src={cartPNG} className={styles.uploadImg} />
+                {cartData && cartData.length > 0 && <div className={styles.cartCount}>{cartData.length}</div>}
               </Link>
               {user?.isAdmin && (
-                <Link href={`/upload`}>
-                  <ImageComponent src={pencilPNG} className={clsx(styles.headerContent, styles.uploadImg)} />
+                <Link className={styles.headerContent} href={`/upload`}>
+                  <ImageComponent src={pencilPNG} className={styles.uploadImg} />
                 </Link>
               )}
               <div className={clsx(styles.headerContent, styles.userProfile)}>
