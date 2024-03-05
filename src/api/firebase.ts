@@ -1,6 +1,6 @@
 import { GoogleAuthProvider, User, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { IProductListProps, IUsersCartProps } from '@/types/firebaseTypes';
-import { get, getDatabase, push, ref, set } from 'firebase/database';
+import { get, getDatabase, push, ref, set, update } from 'firebase/database';
 
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
@@ -118,19 +118,35 @@ export function insertUserCart(
 export async function getUserCartList(uid: string) {
   return get(ref(db, `usersCart/${uid}`)).then((snapshot) => {
     if (snapshot.exists()) {
-      const carts = Object.values(snapshot.val()) as IUsersCartProps[];
+      let array = [] as IUsersCartProps[];
+      const carts = snapshot.val();
 
-      return carts;
+      for (const key in carts) {
+        const newMemberObj = {
+          id: key,
+          ...carts[key],
+        };
+
+        array.push(newMemberObj);
+      }
+
+      return array;
     }
+
+    return [];
   });
 }
 
-export async function getJoin(uid: string) {
-  return get(ref(db, `usersCart/${uid}`)).then((snapshot) => {
-    if (snapshot.exists()) {
-      const carts = Object.values(snapshot.val()) as IUsersCartProps[];
+export async function changeProductAmountInCart(changeTarget: string, product: IUsersCartProps, uid?: string) {
+  if (changeTarget === '+') {
+    update(ref(db, `usersCart/${uid}/${product.id}`), {
+      count: ++product.count,
+    });
 
-      return carts;
-    }
+    return;
+  }
+
+  update(ref(db, `usersCart/${uid}/${product.id}`), {
+    count: --product.count,
   });
 }

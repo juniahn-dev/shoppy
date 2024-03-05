@@ -15,4 +15,5 @@ export interface IUsersCartProps {
   title: string;
   productId: string;
   count: number;
+  id: string;
 }
