@@ -1,6 +1,7 @@
 'use client';
 
 import { changeProductAmountInCart, getUserCartList } from '@/api/firebase';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { IUsersCartProps } from '@/types/firebaseTypes';
 import ImageComponent from '@/components/Common/Image';
@@ -8,7 +9,12 @@ import Wrapper from '@/components/Wrapper';
 import { isNil } from 'ramda';
 import styles from './index.module.scss';
 import { useAuthContext } from '@/components/Context/AuthContext';
-import { useQuery } from '@tanstack/react-query';
+
+interface ICartProductAmountProps {
+  changeTarget: string;
+  product: IUsersCartProps;
+  uid: string;
+}
 
 export default function Cart() {
   const context = useAuthContext();
@@ -19,8 +25,18 @@ export default function Cart() {
     queryFn: () => getUserCartList(user?.uid || ''),
   });
 
+  const queryClient = useQueryClient();
+  const insertCart = useMutation({
+    mutationFn: async ({ changeTarget, product, uid }: ICartProductAmountProps) =>
+      await changeProductAmountInCart(changeTarget, product, uid),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['usersCart'] }),
+  });
+
   const changeAmount = async (changeTarget: string, product: IUsersCartProps) => {
-    await changeProductAmountInCart(changeTarget, product, user?.uid);
+    if (user) {
+      const uid = user.uid;
+      insertCart.mutate({ changeTarget, product, uid });
+    }
   };
 
   return (
