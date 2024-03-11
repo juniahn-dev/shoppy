@@ -2,7 +2,6 @@
 
 import { MouseEvent, useEffect, useState } from 'react';
 
-import { IProductListProps } from '@/types/firebaseTypes';
 import ImageComponent from '@/components/Common/Image';
 import Wrapper from '@/components/Wrapper';
 import { getProduct } from '@/api/firebase';
