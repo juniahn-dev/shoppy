@@ -1,6 +1,6 @@
 import { GoogleAuthProvider, User, getAuth, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { IProductListProps, IUsersCartProps } from '@/types/firebaseTypes';
-import { get, getDatabase, push, ref, set, update } from 'firebase/database';
+import { get, getDatabase, push, ref, remove, set, update } from 'firebase/database';
 
 import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
@@ -149,4 +149,8 @@ export async function changeProductAmountInCart(changeTarget: string, product: I
   update(ref(db, `usersCart/${uid}/${product.id}`), {
     count: --product.count,
   });
+}
+
+export async function deleteProductInCart(product: IUsersCartProps, uid?: string) {
+  remove(ref(db, `usersCart/${uid}/${product.id}`));
 }
