@@ -9,6 +9,7 @@ import Wrapper from '@/components/Wrapper';
 import { isNil } from 'ramda';
 import styles from './index.module.scss';
 import { useAuthContext } from '@/components/Context/AuthContext';
+import { useMemo } from 'react';
 
 interface ICartProductAmountProps {
   changeTarget: string;
@@ -60,6 +61,18 @@ export default function Cart() {
     }
   };
 
+  const sumProductsPrice = useMemo(() => {
+    if (cartData) {
+      return cartData?.reduce((result, cart) => {
+        const value = cart.count * cart.price;
+
+        return result + value;
+      }, 0);
+    }
+
+    return 0;
+  }, [changeAmount, cartData]);
+
   return (
     <Wrapper>
       <div>
@@ -92,6 +105,25 @@ export default function Cart() {
                 </div>
               );
             })}
+        </div>
+        <div className={styles.totalPrice}>
+          <div className={styles.priceContainer}>
+            Products price
+            <div className={styles.price}>${sumProductsPrice}</div>
+          </div>
+          <div>+</div>
+          <div className={styles.priceContainer}>
+            Delevery price
+            <div className={styles.price}>$3000</div>
+          </div>
+          <div>=</div>
+          <div className={styles.priceContainer}>
+            Total price
+            <div className={styles.price}>${sumProductsPrice + 3000}</div>
+          </div>
+        </div>
+        <div className={styles.orderButton} onClick={() => console.log('Ordering...')}>
+          Order
         </div>
       </div>
     </Wrapper>
