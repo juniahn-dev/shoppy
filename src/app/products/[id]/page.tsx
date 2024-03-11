@@ -1,41 +1,30 @@
 'use client';
 
 import { MouseEvent, useEffect, useState } from 'react';
-import { getProduct, insertUserCart } from '@/api/firebase';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { IProductListProps } from '@/types/firebaseTypes';
 import ImageComponent from '@/components/Common/Image';
 import Wrapper from '@/components/Wrapper';
+import { getProduct } from '@/api/firebase';
 import styles from './index.module.scss';
 import { useAuthContext } from '@/components/Context/AuthContext';
 import { useParams } from 'next/navigation';
-
-interface ICartProps {
-  id: string | string[];
-  product: IProductListProps;
-  option: string;
-  uid: string;
-}
+import useProduct from '@/hooks/useProducts';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Products() {
   const context = useAuthContext();
   const { id } = useParams();
   const user = context?.user.user;
 
-  const queryClient = useQueryClient();
-  const insertCart = useMutation({
-    mutationFn: async ({ id, product, option, uid }: ICartProps) =>
-      await insertUserCart(id, product.image, product.title, product.price, option, uid),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['usersCart'] }),
-  });
+  const [option, setOption] = useState('');
 
   const { data: product } = useQuery({
     queryKey: ['product'],
     queryFn: () => getProduct(id),
   });
 
-  const [option, setOption] = useState('');
+  const { insertCart } = useProduct();
 
   useEffect(() => {
     setOption(product ? product.options[0] : '');

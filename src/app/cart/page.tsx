@@ -1,26 +1,15 @@
 'use client';
 
-import { changeProductAmountInCart, deleteProductInCart, getUserCartList } from '@/api/firebase';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
 import { IUsersCartProps } from '@/types/firebaseTypes';
 import ImageComponent from '@/components/Common/Image';
 import Wrapper from '@/components/Wrapper';
+import { getUserCartList } from '@/api/firebase';
 import { isNil } from 'ramda';
 import styles from './index.module.scss';
 import { useAuthContext } from '@/components/Context/AuthContext';
 import { useMemo } from 'react';
-
-interface ICartProductAmountProps {
-  changeTarget: string;
-  product: IUsersCartProps;
-  uid: string;
-}
-
-interface IDeleteCartProductProps {
-  product: IUsersCartProps;
-  uid: string;
-}
+import useProduct from '@/hooks/useProducts';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Cart() {
   const context = useAuthContext();
@@ -31,25 +20,16 @@ export default function Cart() {
     queryFn: () => getUserCartList(user?.uid || ''),
   });
 
-  const queryClient = useQueryClient();
-  const insertCart = useMutation({
-    mutationFn: async ({ changeTarget, product, uid }: ICartProductAmountProps) =>
-      await changeProductAmountInCart(changeTarget, product, uid),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['usersCart'] }),
-  });
-  const deleteCart = useMutation({
-    mutationFn: async ({ product, uid }: IDeleteCartProductProps) => await deleteProductInCart(product, uid),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['usersCart'] }),
-  });
+  const { changeProductAmount, deleteCart } = useProduct();
 
   const changeAmount = async (changeTarget: string, product: IUsersCartProps) => {
     if (user) {
       if (changeTarget === '-' && product.count > 1) {
         const uid = user.uid;
-        insertCart.mutate({ changeTarget, product, uid });
+        changeProductAmount.mutate({ changeTarget, product, uid });
       } else if (changeTarget === '+') {
         const uid = user.uid;
-        insertCart.mutate({ changeTarget, product, uid });
+        changeProductAmount.mutate({ changeTarget, product, uid });
       }
     }
   };
