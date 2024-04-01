@@ -1,12 +1,10 @@
-import Image, { StaticImageData } from 'next/image';
-
 interface IImageComponentProps {
-  src: string | StaticImageData;
+  src: string;
   className?: string;
 }
 
 const ImageComponent: React.FC<IImageComponentProps> = ({ src, className }) => {
-  return <Image className={className} src={src} alt="image" width="1000" height="1000" />;
+  return <img className={className} src={src} alt="image" width="1000" height="1000" />;
 };
 
 export default ImageComponent;
