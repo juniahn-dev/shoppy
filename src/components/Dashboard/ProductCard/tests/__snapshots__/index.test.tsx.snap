@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProductCard renders flex type card 1`] = `
+<div
+  className="container"
+>
+  <img
+    alt="image"
+    className="image"
+    height="1000"
+    src="https://image"
+    width="1000"
+  />
+  <div
+    className="productInfo"
+  >
+    <div
+      className="productTitle"
+    >
+      <div
+        className="title"
+      >
+        gorgeous shirt
+      </div>
+      $
+      124000
+    </div>
+    female
+  </div>
+</div>
+`;
