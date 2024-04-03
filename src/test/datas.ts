@@ -1,17 +1,19 @@
+import { IUserCombineProps } from '@/hooks/store/user';
+
 export const fakeProducts = [
   {
+    id: 'key-id1',
     category: 'female',
     description: 'soo good',
-    id: 'key-id1',
     image: 'https://image',
     options: ['XL', 'L', 'M'],
     price: 124000,
     title: 'gorgeous shirt',
   },
   {
+    id: 'key-id2',
     category: 'male',
     description: 'soo good job',
-    id: 'key-id2',
     image: 'https://image',
     options: ['XL', 'L', 'M', 'S'],
     price: 12400,
@@ -20,9 +22,9 @@ export const fakeProducts = [
 ];
 
 export const fakeProduct = {
+  id: 'key-id1',
   category: 'female',
   description: 'soo good',
-  id: 'key-id1',
   image: 'https://image',
   options: ['XL', 'L', 'M'],
   price: 124000,
@@ -31,21 +33,29 @@ export const fakeProduct = {
 
 export const fakeCart = [
   {
+    id: 'key-cartId1',
+    productId: 'key-id2',
     option: 'XL',
     price: 12400,
     image: 'https://image',
     title: 'gorgeous T',
-    productId: 'key-id2',
     count: 1,
-    id: 'key-cartId1',
   },
   {
+    id: 'key-cartId2',
+    productId: 'key-id2',
     option: 'L',
     price: 12400,
     image: 'https://image',
     title: 'gorgeous T',
-    productId: 'key-id2',
     count: 2,
-    id: 'key-cartId2',
   },
 ];
+
+export const fakeUser = {
+  user: {
+    uid: 'X-dILOFDNION',
+    displayName: 'juniahn',
+  },
+  loading: false,
+} as IUserCombineProps;

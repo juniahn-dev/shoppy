@@ -1,7 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { fakeCart, fakeUser } from '@/test/datas';
+import { render, screen, waitFor } from '@testing-library/react';
 
+import Cart from '@/app/cart/page';
 import Header from '..';
-import { fakeCart } from '@/test/datas';
+import Products from '@/app/products/[id]/page';
+import { withAllContexts } from '@/test/utils';
 
 jest.mock('next/navigation', () => ({
   useRouter() {
@@ -14,15 +17,32 @@ jest.mock('next/navigation', () => ({
 describe('Header', () => {
   const getUserCartList = jest.fn();
 
-  afterEach(() => {
-    getUserCartList.mockReset();
-  });
+  afterEach(() => getUserCartList.mockReset());
 
   it('renders correctly', () => {
     getUserCartList.mockImplementation(() => fakeCart);
 
-    render(<Header />);
+    render(withAllContexts(<Header />, fakeUser));
+
+    const userNameElement = screen.getByText('juniahn');
 
     expect(screen.getByText('Shoppy')).toBeInTheDocument();
+    expect(userNameElement).toBeInTheDocument();
+  });
+
+  it('navigates to products page on Products button click', async () => {
+    getUserCartList.mockImplementation(() => fakeCart);
+
+    render(
+      withAllContexts(
+        <>
+          <Header />
+          <Cart />
+        </>,
+        fakeUser,
+      ),
+    );
+
+    // await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(fakeCart.length));
   });
 });
