@@ -1,9 +1,8 @@
 import { fakeCart, fakeUser } from '@/test/datas';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, renderHook, screen, waitFor } from '@testing-library/react';
 
 import Cart from '@/app/cart/page';
 import Header from '..';
-import Products from '@/app/products/[id]/page';
 import { withAllContexts } from '@/test/utils';
 
 jest.mock('next/navigation', () => ({
@@ -15,14 +14,17 @@ jest.mock('next/navigation', () => ({
 }));
 
 describe('Header', () => {
-  const getUserCartList = jest.fn();
+  const fakeData = {
+    user: fakeUser,
+    getUserCartList: jest.fn(),
+  };
 
-  afterEach(() => getUserCartList.mockReset());
+  afterEach(() => fakeData.getUserCartList.mockReset());
 
   it('renders correctly', () => {
-    getUserCartList.mockImplementation(() => fakeCart);
+    fakeData.getUserCartList.mockImplementation(() => fakeCart);
 
-    render(withAllContexts(<Header />, fakeUser));
+    render(withAllContexts(<Header />, fakeData));
 
     const userNameElement = screen.getByText('juniahn');
 
@@ -31,18 +33,19 @@ describe('Header', () => {
   });
 
   it('navigates to products page on Products button click', async () => {
-    getUserCartList.mockImplementation(() => fakeCart);
+    fakeData.getUserCartList.mockImplementation(() => fakeCart);
 
+    // withAllContexts 안에 query할 수 있는 api를 넣을 수 없음 이거를 해결해야 함
     render(
       withAllContexts(
         <>
           <Header />
           <Cart />
         </>,
-        fakeUser,
+        fakeData,
       ),
     );
 
-    // await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(fakeCart.length));
+    await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(fakeCart.length));
   });
 });

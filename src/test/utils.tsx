@@ -5,11 +5,11 @@ import { AuthContext } from '@/components/Context/AuthContext';
 import { IUserCombineProps } from '@/hooks/store/user';
 import { ReactNode } from 'react';
 
-export function withAllContexts(children: ReactNode, user: IUserCombineProps) {
+export function withAllContexts(children: ReactNode, user: any) {
   const testClient = createTestQueryClient();
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={user}>
       <QueryClientProvider client={testClient}>{children}</QueryClientProvider>
     </AuthContext.Provider>
   );

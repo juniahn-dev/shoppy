@@ -56,6 +56,7 @@ export const fakeUser = {
   user: {
     uid: 'X-dILOFDNION',
     displayName: 'juniahn',
+    photoURL: 'https://juniahn-img',
   },
   loading: false,
 } as IUserCombineProps;
